@@ -36,15 +36,7 @@
                     JOB SUMMARY
                 </div>
                 <div class="card-body">
-                    {% if not job %}
                     <p>A summary of the job information will appear here</p>
-                    {% else %}
-                    {% if step > 1 %}
-                    <h4>{{job.name}}</h4>
-                    <span>{{job.quantity}} Item</span><br />
-                    <span>{{job.get_size_display}} Job</span>
-                    {% endif %}
-                    {% endif %}
                 </div>
             </div>
         </div>
@@ -84,52 +76,54 @@
                 <div class="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">
                     <h1>Item Info</h1>
                     <form method="POST" enctype="multipart/form-data">
-                        <b class="text-secondary">Item Information</b><br/>
-                        <div class="card bg-white mt-2 mb-5">
-                            <div class="card-body">
-                                {% csrf_token %}
-                                {% bootstrap_form step1_form %}
-                            </div>
-                        </div>
-                        <input type="hidden" name="step" value="1">
-                        <button type="submit" class="btn btn-warning">Save & Continue</button>
-                    </form>
+                      <b class="text-secondary">Item Information</b><br/>
+                      <div class="card bg-white mt-2 mb-5">
+                          <div class="card-body">
+                            {%csrf_token%}
+                            {%bootstrap_form step1_form%}
+                          </div>
+                      </div>
+                      <input type="hidden" name="step" value="1">
+                      <button type="submit" class="btn btn-warning" >Save & Continue</button>
+                  </form>
+                    
                 </div>
 
                 <div class="tab-pane fade " id="pills-pickup" role="tabpanel" aria-labelledby="pills-pickup-tab">
                     <h1>Pickup</h1>
                     <form method="POST" enctype="multipart/form-data">
-                        <b class="text-secondary">Pickup Information</b><br/>
-                        <div class="card bg-white mt-2 mb-5">
-                            <div class="card-body">
-                                <div class="row">
-                                    <div class="col-lg-8">
-                                        {% csrf_token %}
-                                        {% bootstrap_form step2_form exclude='pickup_lat,pickup_lng' %}
-                                        <input hidden id="pickup_lat" name="pick_lat" value="{{job.pickup_lat}}">
-                                        <input hidden id="pickup_lng" name="pick_lng" value="{{job.pickup_lng}}">
-                                    </div>
-                                    <div class="col-lg-4">
-                                        <div id="map"></div>
-                                        <div id="infowindow-content">
-                                          <span id="place-name" class="title"></span><br />
-                                          <span id="place-address"></span>
-                                        </div>
-                                    </div>
-                                </div>
-                               
+                      <b class="text-secondary">Pickup Information</b><br/>
+                      <div class="card bg-white mt-2 mb-5">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-lg-8">
+                                {% csrf_token %}
+                                {% bootstrap_form step2_form exclude='pickup_lat,pickup_lng' %}
+                                <input hidden id="pickup_lat" name="pick_lat" value="{{job.pickup_lat}}">
+                                <input hidden id="pickup_lng" name="pick_lng" value="{{job.pickup_lng}}">
                             </div>
-                        </div>
-                        <input type="hidden" name="step" value="2">
-                        <button type="button" class="btn btn-outline-warning"
-                        onclick="$('#pills-info-tab').tab('show')";
-                        >Back</button>
-                        <button type="submit" class="btn btn-warning">Save & Continue</button>
-                    </form>
+                            <div class="col-lg-4">
+                                <div id="pickup-map"></div>
+                                <div id="infowindow-content">
+                                  <span id="place-name" class="title"></span><br />
+                                  <span id="place-address"></span>
+                                </div>
+                            </div>
+                            </div>
+                          </div>
+                      </div>
+                      <input type="hidden" name="step" value="1">
+                      <button type="button" class="btn btn-outline-warning"
+                      onclick="$('#pills-info-tab').tab('show')">Back</button>
+                      <button type="submit" class="btn btn-warning">Save & Continue</button>
+                  </form>
+                    
                 </div>
 
                 <div class="tab-pane fade" id="pills-delivery" role="tabpanel" aria-labelledby="pills-delivery-tab">
                     <h1>Delivery</h1>
+                    <button type="button" class="btn btn-outline-warning"
+                      onclick="$('#pills-info-tab').tab('show')">Back</button>
                 </div>
 
                 <div class="tab-pane fade" id="pills-payment" role="tabpanel" aria-labelledby="pills-payment-tab">
@@ -146,9 +140,7 @@
     var pickupLat = parseFloat('{{ job.pickup_lat}}')
     var pickupLng = parseFloat('{{ job.pickup_lng}}')
 
-    // This example requires the Places library. Include the libraries=places
-// parameter when you first load the API. For example:
-// <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places">
+
 function initMap() {
   const map = new google.maps.Map(document.getElementById("pickup-map"), {
     center: { lat: pickupLat || 40.749933, lng: pickupLng || -73.98633 },
@@ -163,8 +155,7 @@ function initMap() {
     })
   }
 
-  const card = document.getElementById("pac-card");
-  const input = document.getElementById("pac-input");
+  const input = document.getElementById("id_pickup_address");
   const biasInputElement = document.getElementById("use-location-bias");
   const strictBoundsInputElement = document.getElementById("use-strict-bounds");
   const options = {
@@ -172,8 +163,6 @@ function initMap() {
     strictBounds: false,
     types: ["establishment"],
   };
-
-  map.controls[google.maps.ControlPosition.TOP_LEFT].push(card);
 
   const autocomplete = new google.maps.places.Autocomplete(input, options);
 
@@ -220,17 +209,6 @@ function initMap() {
       place.formatted_address;
     infowindow.open(map, marker);
   });
-
-  // Sets a listener on a radio button to change the filter type on Places
-  // Autocomplete.
-  function setupClickListener(id, types) {
-    const radioButton = document.getElementById(id);
-
-    radioButton.addEventListener("click", () => {
-      autocomplete.setTypes(types);
-      input.value = "";
-    });
-  }
 
   setupClickListener("changetype-all", []);
   setupClickListener("changetype-address", ["address"]);

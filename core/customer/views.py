@@ -51,6 +51,11 @@ def payment_method_page(request):
 
 @login_required(login_url="/sign-in/?next=/customer")
 def create_job_page(request):
+    step1_form = forms.JobCreateStep1Form
+    step2_form = forms.JobCreateStep2Form
    
 
-    return render(request,'customer/create_job.html')
+    return render(request,'customer/create_job.html',{
+        "step1_form": step1_form,
+        "step2_form": step2_form,
+    })
