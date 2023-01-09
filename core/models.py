@@ -64,6 +64,12 @@ class Job(models.Model):
     pickup_name = models.CharField(max_length=255,blank=True)
     pickup_phone = models.CharField(max_length=50,blank=True)
 
+    delivery_address = models.CharField(max_length=255,blank=True)
+    delivery_lat = models.FloatField(default=0)
+    delivery_lng = models.FloatField(default=0)
+    delivery_name = models.CharField(max_length=255,blank=True)
+    delivery_phone = models.CharField(max_length=50,blank=True)
+
     
     def __str__(self):
         return self.name

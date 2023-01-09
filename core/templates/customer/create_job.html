@@ -20,7 +20,7 @@
     #pills-tab a.active{
         color: orange;
     }
-    #pickup-map {
+    #pickup-map, #delivery-map {
         height: 100%;
     }
 </style>
@@ -36,7 +36,26 @@
                     JOB SUMMARY
                 </div>
                 <div class="card-body">
-                    <p>A summary of the job information will appear here</p>
+                  {% if not job %}
+                  <p>A summary of the job information will appear here</p>
+                  {% else %}
+
+                  {% if step > 1 %}
+                  <h4>{{job.name}}</h4>
+                  <span>{{job.quantity}} Item</span><br />
+                  <span>{{ job.get_size_display }} Job</span>
+                  {% endif %}
+
+                  {% if step > 2 %}
+                  <hr/>
+                  <p class="text-secondary"><small><b>PICKUP</b></small></p>
+                  <h4>{{job.pickup_name}}</h4>
+                  <span>{{job.pickup_address}} Item</span><br />
+
+                  {% endif %}
+
+                  
+                  {% endif %}
                 </div>
             </div>
         </div>
@@ -47,22 +66,22 @@
                     
                     <ul class="nav nav-pills nav-justified align-items-center mb-3" id="pills-tab" role="tablist">
                         <li class="nav-item" role="presentation">
-                            <a class="active" id="pills-info-tab" data-toggle="pill" href="#pills-info" role="tab" 
+                            <a class="{% if step == 1 %}active{% endif %}" id="pills-info-tab" data-toggle="pill" href="#pills-info" role="tab" 
                                 aria-controls="pills-info" aria-selected="true">Item Info</a>
                         </li>
                         <i class="fas fa-chevron-right"></i>
                         <li class="nav-item" role="presentation">
-                            <a  id="pills-pickup-tab" data-toggle="pill" href="#pills-pickup" role="tab" 
+                            <a class="{% if step == 2 %}active{% endif %} id="pills-pickup-tab" data-toggle="pill" href="#pills-pickup" role="tab" 
                                 aria-controls="pills-pickup" aria-selected="false">Pickup</a>
                         </li>
                         <i class="fas fa-chevron-right"></i>
                         <li class="nav-item" role="presentation">
-                            <a  id="pills-delivery-tab" data-toggle="pill" href="#pills-delivery" role="tab" 
+                            <a class="{% if step == 3 %}active{% endif %} id="pills-delivery-tab" data-toggle="pill" href="#pills-delivery" role="tab" 
                                 aria-controls="pills-delivery" aria-selected="false">Delivery</a>
                         </li>
                         <i class="fas fa-chevron-right"></i>
                         <li class="nav-item" role="presentation">
-                            <a  id="pills-payment-tab" data-toggle="pill" href="#pills-payment" role="tab" 
+                            <a class="{% if step == 4 %}active{% endif %} id="pills-payment-tab" data-toggle="pill" href="#pills-payment" role="tab" 
                                 aria-controls="pills-payment" aria-selected="false">Payment</a>
                         </li>
                       </ul>
@@ -73,7 +92,7 @@
             <b>CREATE A JOB</b>
             <div class="tab-content" id="pills-tabContent">
 
-                <div class="tab-pane fade show active" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">
+                <div class="tab-pane fade {% if step == 1 %}show active{% endif %}" id="pills-info" role="tabpanel" aria-labelledby="pills-info-tab">
                     <h1>Item Info</h1>
                     <form method="POST" enctype="multipart/form-data">
                       <b class="text-secondary">Item Information</b><br/>
@@ -89,7 +108,7 @@
                     
                 </div>
 
-                <div class="tab-pane fade " id="pills-pickup" role="tabpanel" aria-labelledby="pills-pickup-tab">
+                <div class="tab-pane fade {% if step == 2 %}show active{% endif %}" id="pills-pickup" role="tabpanel" aria-labelledby="pills-pickup-tab">
                     <h1>Pickup</h1>
                     <form method="POST" enctype="multipart/form-data">
                       <b class="text-secondary">Pickup Information</b><br/>
@@ -104,15 +123,16 @@
                             </div>
                             <div class="col-lg-4">
                                 <div id="pickup-map"></div>
-                                <div id="infowindow-content">
-                                  <span id="place-name" class="title"></span><br />
-                                  <span id="place-address"></span>
+                                <div id="pickup-infowindow-content">
+                                  <img src="" width="16" height="16" id="pickup-place-icon">
+                                  <span id="pickup-place-name" class="title"></span><br />
+                                  <span id="pickup-place-address"></span>
                                 </div>
                             </div>
                             </div>
                           </div>
                       </div>
-                      <input type="hidden" name="step" value="1">
+                      <input type="hidden" name="step" value="2">
                       <button type="button" class="btn btn-outline-warning"
                       onclick="$('#pills-info-tab').tab('show')">Back</button>
                       <button type="submit" class="btn btn-warning">Save & Continue</button>
@@ -120,13 +140,40 @@
                     
                 </div>
 
-                <div class="tab-pane fade" id="pills-delivery" role="tabpanel" aria-labelledby="pills-delivery-tab">
+                <div class="tab-pane fade {% if step == 3 %}show active{% endif %}" id="pills-delivery" role="tabpanel" aria-labelledby="pills-delivery-tab">
                     <h1>Delivery</h1>
-                    <button type="button" class="btn btn-outline-warning"
-                      onclick="$('#pills-info-tab').tab('show')">Back</button>
+
+                    <form method="POST" enctype="multipart/form-data">
+                      <b class="text-secondary">Delivery Information</b><br/>
+                      <div class="card bg-white mt-2 mb-5">
+                          <div class="card-body">
+                            <div class="row">
+                              <div class="col-lg-8">
+                                {% csrf_token %}
+                                {% bootstrap_form step3_form exclude='delivery_lat,delivery_lng' %}
+                                <input hidden id="delivery_lat" name="delivery_lat" value="{{job.delivery_lat}}">
+                                <input hidden id="delivery_lng" name="delivery_lng" value="{{job.delivery_lng}}">
+                            </div>
+                            <div class="col-lg-4">
+                                <div id="delivery-map"></div>
+                                <div id="delivery-infowindow-content">
+                                  <img src="" width="16" height="16" id="delivery-place-icon">
+                                  <span id="delivery-place-name" class="title"></span><br />
+                                  <span id="delivery-place-address"></span>
+                                </div>
+                            </div>
+                            </div>
+                          </div>
+                      </div>
+                      <input type="hidden" name="step" value="3">
+                      <button type="button" class="btn btn-outline-warning"
+                      onclick="$('#pills-pickup').tab('show')">Back</button>
+                      <button type="submit" class="btn btn-warning">Save & Continue</button>
+                  </form>
+                    
                 </div>
 
-                <div class="tab-pane fade" id="pills-payment" role="tabpanel" aria-labelledby="pills-payment-tab">
+                <div class="tab-pane fade {% if step == 4 %}show active{% endif %}" id="pills-payment" role="tabpanel" aria-labelledby="pills-payment-tab">
                     <h1>Payment</h1>
                 </div>
 
@@ -140,39 +187,35 @@
     var pickupLat = parseFloat('{{ job.pickup_lat}}')
     var pickupLng = parseFloat('{{ job.pickup_lng}}')
 
+    var deliveryLat = parseFloat('{{ job.delivery_lat}}')
+    var deliveryLng = parseFloat('{{ job.delivery_lng}}')
 
-function initMap() {
-  const map = new google.maps.Map(document.getElementById("pickup-map"), {
-    center: { lat: pickupLat || 40.749933, lng: pickupLng || -73.98633 },
+
+function initMapByType(type,initLat,initLng) {
+  const map = new google.maps.Map(document.getElementById(type + "-map"), {
+    center: { lat: initLat || 40.749933, lng: initLng || -73.98633 },
     zoom: 13,
-    mapTypeControl: false,
   });
 
-  if(pickupLat&&pickupLng){
+  if(initLat&&initLng){
     new google.maps.Marker({
-        position: new google.maps.LatLng(pickupLat,pickupLng),
+        position: new google.maps.LatLng(initLat,initLng),
         map: map,
     })
   }
 
-  const input = document.getElementById("id_pickup_address");
-  const biasInputElement = document.getElementById("use-location-bias");
-  const strictBoundsInputElement = document.getElementById("use-strict-bounds");
-  const options = {
-    fields: ["formatted_address", "geometry", "name"],
-    strictBounds: false,
-    types: ["establishment"],
-  };
 
-  const autocomplete = new google.maps.places.Autocomplete(input, options);
+  const input = document.getElementById("id_"+ type + "_address");
+  const autocomplete = new google.maps.places.Autocomplete(input);
 
   // Bind the map's bounds (viewport) property to the autocomplete object,
   // so that the autocomplete requests use the current map bounds for the
   // bounds option in the request.
   autocomplete.bindTo("bounds", map);
+  autocomplete.setFields(["address_components","geometry","icon","name"]);
 
   const infowindow = new google.maps.InfoWindow();
-  const infowindowContent = document.getElementById("infowindow-content");
+  const infowindowContent = document.getElementById(type + "-infowindow-content");
 
   infowindow.setContent(infowindowContent);
 
@@ -204,50 +247,35 @@ function initMap() {
 
     marker.setPosition(place.geometry.location);
     marker.setVisible(true);
-    infowindowContent.children["place-name"].textContent = place.name;
-    infowindowContent.children["place-address"].textContent =
-      place.formatted_address;
+    let address = "";
+
+    if(place.address_components){
+      address = [
+        (place.address_components[0]&&
+        place.address_components[0].short_name)||
+        "",
+        (place.address_components[1]&&
+        place.address_components[1].short_name)||
+        "",
+        (place.address_components[2]&&
+        place.address_components[2].short_name)||
+        "",
+      ].join("  ");
+    }
+    infowindowContent.children[type+"-place-icon"].textContent = place.icon;
+    infowindowContent.children[type+"-place-name"].textContent = place.name;
+    infowindowContent.children[type+"-place-address"].textContent = address;
     infowindow.open(map, marker);
-  });
 
-  setupClickListener("changetype-all", []);
-  setupClickListener("changetype-address", ["address"]);
-  setupClickListener("changetype-establishment", ["establishment"]);
-  setupClickListener("changetype-geocode", ["geocode"]);
-  setupClickListener("changetype-cities", ["(cities)"]);
-  setupClickListener("changetype-regions", ["(regions)"]);
-  biasInputElement.addEventListener("change", () => {
-    if (biasInputElement.checked) {
-      autocomplete.bindTo("bounds", map);
-    } else {
-      // User wants to turn off location bias, so three things need to happen:
-      // 1. Unbind from map
-      // 2. Reset the bounds to whole world
-      // 3. Uncheck the strict bounds checkbox UI (which also disables strict bounds)
-      autocomplete.unbind("bounds");
-      autocomplete.setBounds({ east: 180, west: -180, north: 90, south: -90 });
-      strictBoundsInputElement.checked = biasInputElement.checked;
-    }
-
-    input.value = "";
-  });
-  strictBoundsInputElement.addEventListener("change", () => {
-    autocomplete.setOptions({
-      strictBounds: strictBoundsInputElement.checked,
-    });
-    if (strictBoundsInputElement.checked) {
-      biasInputElement.checked = strictBoundsInputElement.checked;
-      autocomplete.bindTo("bounds", map);
-    }
-
-    input.value = "";
-
-    $("#pickup_lat").val(place.geometry.location.lat());
-    $("#pickup_lng").val(place.geometry.location.lng());
+    $("#"+type+"_lat").val(place.geometry.location.lat());
+    $("#"+type+"_lng").val(place.geometry.location.lng());
   });
 }
 
-window.initMap = initMap;
+function initMap(){
+  initMapByType("pickup",pickupLat,pickupLng);
+  initMapByType("delivery",deliveryLat,deliveryLng);
+}
 </script>
 
 {% endblock %}
