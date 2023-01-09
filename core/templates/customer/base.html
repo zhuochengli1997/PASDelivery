@@ -3,6 +3,10 @@
 
 {% block content %}
 
+{% url 'customer:create_job' as create_job_url %}
+{% url 'customer:profile' as profile_url %}
+{% url 'customer:payment_method' as payment_method_url %}
+
 <div class="container bg-light mt-4 pt3 pb-3">
     <div class="row">
         <div class="col-lg-4">
@@ -11,12 +15,14 @@
                 <h4>{{ reques.user.get_full_name }}</h4>
                 <p class="text-secondary">{{ request.user.email }}</p>
             </div>
-            <ul class="list-group">
-                <li class="list-group-item">Create a Job</li>
-                <li class="list-group-item">My Job</li>
-                <li class="list-group-item">Profile Information</li>
-                <li class="list-group-item">Payment Details</li>
-              </ul>
+
+            <div class="list-group mt-5">
+                <a href="{% url 'customer:create_job' %}" class="list-group-item list list-group-item-action {% if request.path == create_job_url%}active{% endif %}">Create a Job</a>
+                <a href="#" class="list-group-item list list-group-item-action ">My Job</a>
+                <a href="{% url 'customer:profile' %}" class="list-group-item list list-group-item-action {% if request.path == profile_url%}active{% endif %}">Profile</a>
+                <a href="{% url 'customer:payment_method' %}" class="list-group-item list list-group-item-action {% if request.path == payment_method_url%}active{% endif %}">Payment</a>
+            </div>
+
         </div>
         <div class="col-lg-8">
             {% block main %}

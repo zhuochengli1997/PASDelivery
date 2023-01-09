@@ -5,6 +5,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from core.customer import forms
 from django.conf import settings
+from core.models import Job
 
 from core.customer import forms
 
@@ -47,3 +48,9 @@ def payment_method_page(request):
         "client_secret": intent.client_secret,
         "STRIPE_API_PUBLIC_KEY": settings.STRIPE_API_PUBLIC_KEY,
     })
+
+@login_required(login_url="/sign-in/?next=/customer")
+def create_job_page(request):
+   
+
+    return render(request,'customer/create_job.html')
