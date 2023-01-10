@@ -3,7 +3,7 @@
 
 {% block head %}
 <script
-      src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAs4CR-YDktdbP6ics9S5kuJdRxv4qZdsQ&callback=initMap&libraries=places&v=weekly"
+      src="https://maps.googleapis.com/maps/api/js?key={{GOOGLE_MAP_API_KEY}}&callback=initMap&libraries=places&v=weekly"
       defer
     ></script>
 
@@ -48,10 +48,18 @@
 
                   {% if step > 2 %}
                   <hr/>
-                  <p class="text-secondary"><small><b>PICKUP</b></small></p>
+                  <p class="text-secondary"><small><b>Pickup</b></small></p>
                   <h4>{{job.pickup_name}}</h4>
                   <span>{{job.pickup_address}} Item</span><br />
 
+                  {% endif %}
+
+                  {% if step > 3 %}
+
+                  <hr/>
+                  <p class="text-secondary"><small><b>Delivery</b></small></p>
+                  <h4>{{job.delivery_name}}</h4>
+                  <span>{{job.delivery_address}} Item</span><br />
                   {% endif %}
 
                   
@@ -118,8 +126,8 @@
                               <div class="col-lg-8">
                                 {% csrf_token %}
                                 {% bootstrap_form step2_form exclude='pickup_lat,pickup_lng' %}
-                                <input hidden id="pickup_lat" name="pick_lat" value="{{job.pickup_lat}}">
-                                <input hidden id="pickup_lng" name="pick_lng" value="{{job.pickup_lng}}">
+                                <input hidden id="pickup_lat" name="pickup_lat" value="{{job.pickup_lat}}">
+                                <input hidden id="pickup_lng" name="pickup_lng" value="{{job.pickup_lng}}">
                             </div>
                             <div class="col-lg-4">
                                 <div id="pickup-map"></div>
@@ -173,6 +181,7 @@
 
                 <div class="tab-pane fade {% if step == 4 %}show active{% endif %}" id="pills-payment" role="tabpanel" aria-labelledby="pills-payment-tab">
                     <h1>Payment</h1>
+                    
                 </div>
 
             </div>
@@ -260,13 +269,13 @@ function initMapByType(type,initLat,initLng) {
         "",
       ].join("  ");
     }
-    infowindowContent.children[type+"-place-icon"].textContent = place.icon;
+    infowindowContent.children[type+"-place-icon"].src = place.icon;
     infowindowContent.children[type+"-place-name"].textContent = place.name;
     infowindowContent.children[type+"-place-address"].textContent = address;
     infowindow.open(map, marker);
 
-    $("#"+type+"_lat").val(place.geometry.location.lat());
-    $("#"+type+"_lng").val(place.geometry.location.lng());
+    $("#" + type + "_lat").val(place.geometry.location.lat());
+    $("#" + type + "_lng").val(place.geometry.location.lng());
   });
 }
 

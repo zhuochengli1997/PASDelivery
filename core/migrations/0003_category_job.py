@@ -30,7 +30,7 @@ class Migration(migrations.Migration):
                 ('size', models.CharField(choices=[('small', 'Small'), ('medium', 'Medium'), ('large', 'Large')], default='medium', max_length=20)),
                 ('quantity', models.IntegerField(default=1)),
                 ('photo', models.ImageField(upload_to='job/phtots/')),
-                ('status', models.CharField(choices=[('creading', 'Creating'), ('precessing', 'Processing'), ('picking', 'Picking'), ('delivering', 'Delivering'), ('completed', 'Completed'), ('canceled', 'Canceled')], default='creading', max_length=20)),
+                ('status', models.CharField(choices=[('creading', 'Creating'), ('precessing', 'Processing'), ('picking', 'Picking'), ('delivering', 'Delivering'), ('completed', 'Completed'), ('canceled', 'Canceled')], default='creating', max_length=20)),
                 ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
                 ('category', models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='core.category')),
                 ('customer', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.customer')),

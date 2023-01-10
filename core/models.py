@@ -33,7 +33,7 @@ class Job(models.Model):
         (LARGE_SIZE, 'Large'),
     )
 
-    CREATING_STATUS = 'creading'
+    CREATING_STATUS = 'creating'
     PROCESSING_STATUS = 'precessing'
     PICKING_STATUS = 'picking'
     DELIVERING_STATUS = 'delivering'
@@ -70,6 +70,10 @@ class Job(models.Model):
     delivery_name = models.CharField(max_length=255,blank=True)
     delivery_phone = models.CharField(max_length=50,blank=True)
 
+    duration = models.IntegerField(default=0)
+    distance = models.FloatField(default=0)
+    pricce = models.FloatField(default=0)
+
     
     def __str__(self):
-        return self.name
+        return self.description
