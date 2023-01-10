@@ -54,7 +54,22 @@ def payment_method_page(request):
 
 @login_required(login_url="/sign-in/?next=/customer")
 def create_job_page(request):
+
     current_customer = request.user.customer
+
+    has_current_job = Job.objects.filter(
+        customer = current_customer,
+        status__in = [
+            Job.PROCESSING_STATUS,
+            Job.PICKING_STATUS,
+            Job.DELIVERING_STATUS
+        ]
+    ).exists()
+
+    if has_current_job:
+        messages.warning(request,"You currently have a job in process")
+        return redirect(reverse('customer:current_jobs'))
+
     creating_job = Job.objects.filter(customer=current_customer,status=Job.CREATING_STATUS).last()
     step1_form = forms.JobCreateStep1Form(instance=creating_job)
     step2_form = forms.JobCreateStep2Form(instance=creating_job)
@@ -95,7 +110,8 @@ def create_job_page(request):
 
                     creating_job.distance = round(distance/1000,2)
                     creating_job.duration = int(duration/60)
-                    creating_job.pricce = creating_job.distance*1 # $1 per second
+                    creating_job.price = creating_job.distance*1 # $1 per second
+                    creating_job.status = Job.PROCESSING_STATUS
                     creating_job.save()
 
 
@@ -124,4 +140,32 @@ def create_job_page(request):
         "step3_form": step3_form,
         "GOOGLE_MAP_API_KEY": settings.GOOGLE_MAP_API_KEY
 
+    })
+
+@login_required(login_url="/sign-in/?next=/customer")
+def current_jobs_page(request):
+    jobs = Job.objects.filter(
+        status__in=[
+            Job.PROCESSING_STATUS,
+            Job.PICKING_STATUS,
+            Job.DELIVERING_STATUS
+        ]
+    )
+
+    return render(request,'customer/jobs.html',{
+        "jobs": jobs
+    })
+
+@login_required(login_url="/sign-in/?next=/customer")
+def archived_jobs_page(request):
+    jobs = Job.objects.filter(
+        customer=request.user.customer,
+        status__in=[
+            Job.COMPLETED_STATUS,
+            Job.CANCELED_STATUS
+        ]
+    )
+
+    return render(request,'customer/jobs.html',{
+        "jobs": jobs
     })

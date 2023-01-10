@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='job',
-            name='pricce',
+            name='price',
             field=models.FloatField(default=0),
         ),
     ]
