@@ -75,6 +75,8 @@ def create_job_page(request):
     step2_form = forms.JobCreateStep2Form(instance=creating_job)
     step3_form = forms.JobCreateStep3Form(instance=creating_job)
 
+    api_key = settings.GOOGLE_MAP_API_KEY
+
     if request.method == "POST":
         if request.POST.get('step')=='1':
 
@@ -89,6 +91,11 @@ def create_job_page(request):
             step2_form = forms.JobCreateStep2Form(request.POST,instance=creating_job)
             if step2_form.is_valid():
                 creating_job = step2_form.save()
+                api_response = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address={0}&key={1}'.format(creating_job.pickup_address, api_key))
+                api_response_dict = api_response.json()
+                creating_job.pickup_lat = api_response_dict['results'][0]['geometry']['location']['lat']
+                creating_job.pickup_lng = api_response_dict['results'][0]['geometry']['location']['lng']
+                creating_job.save()
                 return redirect(reverse('customer:create_job'))
         
         elif request.POST.get('step')=='3':
@@ -96,6 +103,11 @@ def create_job_page(request):
             step3_form = forms.JobCreateStep3Form(request.POST,instance=creating_job)
             if step3_form.is_valid():
                 creating_job = step3_form.save()
+                api_response = requests.get('https://maps.googleapis.com/maps/api/geocode/json?address={0}&key={1}'.format(creating_job.delivery_address, api_key))
+                api_response_dict = api_response.json()
+                creating_job.delivery_lat = api_response_dict['results'][0]['geometry']['location']['lat']
+                creating_job.delivery_lng = api_response_dict['results'][0]['geometry']['location']['lng']
+                creating_job.save()
                 try:
                     r = requests.get("https://maps.googleapis.com/maps/api/distancematrix/json?destinations={}&origins={}&units=imperial&key={}".format(
                         creating_job.pickup_address,

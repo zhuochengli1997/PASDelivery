@@ -24,6 +24,10 @@
 <script src="http://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAP_API_KEY }}&callback=initMap&libraries=places&v=weekly" defer></script>
 
 <script>
+    var pickupLat = parseFloat("{{job.pickup_lat}}");
+    var pickupLng = parseFloat("{{job.pickup_lng}}");
+    var deliveryLat = parseFloat("{{job.delivery_lat}}");
+    var deliveryLng = parseFloat("{{job.delivery_lng}}");
     
     function initMap() {
         const directionsService = new google.maps.DirectionsService();
@@ -41,8 +45,8 @@
 function calculateAndDisplayRoute(directionsService, directionsRenderer) {
   directionsService
     .route({
-      origin: new google.maps.LatLng(-84.65,-88.65),
-      destination: new google.maps.LatLng( 41.85,-87.65),
+      origin: new google.maps.LatLng(pickupLat,pickupLng),
+      destination: new google.maps.LatLng(deliveryLat,deliveryLng),
       travelMode: google.maps.TravelMode.DRIVING,
     })
     .then((response) => {

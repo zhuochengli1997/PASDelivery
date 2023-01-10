@@ -191,35 +191,35 @@
 
 <script>
 
-    var pickupLat = parseFloat('{{ job.pickup_lat}}')
-    var pickupLng = parseFloat('{{ job.pickup_lng}}')
+  var pickupLat = parseFloat('{{ job.pickup_lat}}')
+  var pickupLng = parseFloat('{{ job.pickup_lng}}')
 
-    var deliveryLat = parseFloat('{{ job.delivery_lat}}')
-    var deliveryLng = parseFloat('{{ job.delivery_lng}}')
-
-
-function initMapByType(type,initLat,initLng) {
-  const map = new google.maps.Map(document.getElementById(type + "-map"), {
-    center: { lat: initLat || 40.749933, lng: initLng || -73.98633 },
-    zoom: 13,
-  });
-
-  if(initLat&&initLng){
-    new google.maps.Marker({
-        position: new google.maps.LatLng(initLat,initLng),
-        map: map,
-    })
-  }
+  var deliveryLat = parseFloat('{{ job.delivery_lat}}')
+  var deliveryLng = parseFloat('{{ job.delivery_lng}}')
 
 
-  const input = document.getElementById("id_"+ type + "_address");
-  const autocomplete = new google.maps.places.Autocomplete(input);
+  function initMapByType(type,initLat,initLng) {
+    const map = new google.maps.Map(document.getElementById(type + "-map"), {
+      center: { lat: initLat || 40.749933, lng: initLng || -73.98633 },
+      zoom: 13,
+    });
 
-  // Bind the map's bounds (viewport) property to the autocomplete object,
-  // so that the autocomplete requests use the current map bounds for the
-  // bounds option in the request.
-  autocomplete.bindTo("bounds", map);
-  autocomplete.setFields(["address_components","geometry","icon","name"]);
+    if(initLat&&initLng){
+     new google.maps.Marker({
+          position: new google.maps.LatLng(initLat,initLng),
+          map: map,
+      })
+    }
+
+
+    const input = document.getElementById("id_"+ type + "_address");
+    const autocomplete = new google.maps.places.Autocomplete(input);
+
+    // Bind the map's bounds (viewport) property to the autocomplete object,
+    // so that the autocomplete requests use the current map bounds for the
+    // bounds option in the request.
+    autocomplete.bindTo("bounds", map);
+    autocomplete.setFields(["address_components","geometry","icon","name"]);
 
   const infowindow = new google.maps.InfoWindow();
   const infowindowContent = document.getElementById(type + "-infowindow-content");
@@ -269,9 +269,9 @@ function initMapByType(type,initLat,initLng) {
         "",
       ].join("  ");
     }
-    infowindowContent.children[type+"-place-icon"].src = place.icon;
-    infowindowContent.children[type+"-place-name"].textContent = place.name;
-    infowindowContent.children[type+"-place-address"].textContent = address;
+    infowindowContent.children[type + "-place-icon"].src = place.icon;
+    infowindowContent.children[type + "-place-name"].textContent = place.name;
+    infowindowContent.children[type + "-place-address"].textContent = address;
     infowindow.open(map, marker);
 
     $("#" + type + "_lat").val(place.geometry.location.lat());
