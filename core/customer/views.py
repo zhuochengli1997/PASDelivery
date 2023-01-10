@@ -68,7 +68,7 @@ def create_job_page(request):
 
     if has_current_job:
         messages.warning(request,"You currently have a job in process")
-        return redirect(reverse('customer:current_jobs'))
+       # return redirect(reverse('customer:current_jobs'))
 
     creating_job = Job.objects.filter(customer=current_customer,status=Job.CREATING_STATUS).last()
     step1_form = forms.JobCreateStep1Form(instance=creating_job)
@@ -110,7 +110,7 @@ def create_job_page(request):
 
                     creating_job.distance = round(distance/1000,2)
                     creating_job.duration = int(duration/60)
-                    creating_job.price = creating_job.distance*1 # $1 per second
+                    creating_job.price = creating_job.distance*25 # $1 per second
                     creating_job.status = Job.PROCESSING_STATUS
                     creating_job.save()
 
@@ -168,4 +168,12 @@ def archived_jobs_page(request):
 
     return render(request,'customer/jobs.html',{
         "jobs": jobs
+    })
+
+@login_required(login_url="/sign-in/?next=/customer")
+def job_page(request,job_id):
+    job = Job.objects.get(id=job_id)
+    return render(request,'customer/job.html',{
+        "job": job,
+        "GOOGLE_MAP_API_KEY": settings.GOOGLE_MAP_API_KEY
     })

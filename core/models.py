@@ -54,7 +54,7 @@ class Job(models.Model):
     category =  models.ForeignKey(Category,on_delete=models.SET_NULL,null=True,blank=True)
     size = models.CharField(max_length=20,choices=SIZES,default=MEDIUM_SIZE)
     quantity = models.IntegerField(default=1)
-    photo = models.ImageField(upload_to='job/phtots/')
+    photo = models.ImageField(upload_to='job/photos/')
     status = models.CharField(max_length=20,choices=STATUS,default=CREATING_STATUS)
     created_at = models.DateTimeField(default=timezone.now)
 
@@ -72,7 +72,14 @@ class Job(models.Model):
 
     duration = models.IntegerField(default=0)
     distance = models.FloatField(default=0)
-    pricce = models.FloatField(default=0)
+    price = models.FloatField(default=0)
+
+    pickup_photo = models.ImageField(upload_to='job/pickup_photos/',null=True,blank=True)
+    pickedup_at = models.DateTimeField(null=True,blank=True)
+
+    delivery_photo = models.ImageField(upload_to='job/pickup_photos/',null=True,blank=True)
+    delivered_at = models.DateTimeField(null=True,blank=True)
+
 
     
     def __str__(self):
