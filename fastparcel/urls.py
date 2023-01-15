@@ -21,7 +21,8 @@ customer_urlpatterns=[
 
 transporter_urlpatterns=[
     path('', transporter_views.home,name="home"),
-    path('orders/', transporter_views.orders_view, name="orders")
+    path('orders/', transporter_views.orders_view, name="orders"),
+    path('place_offer/<int:id>', transporter_views.place_offer, name="place_offer")
 ]
 
 urlpatterns = [
