@@ -50,7 +50,7 @@ class Order(models.Model):
 class Car(models.Model):
     battery_autonomy = models.IntegerField(default=500) # km left
 
-class Shipment(models.Model):
+#class Shipment(models.Model):
     car = models.ForeignKey(Car, related_name="shipments", on_delete=models.CASCADE)
     # store some route
 
@@ -61,8 +61,7 @@ class Parcel(models.Model):
     actual_deliver_datetime = models.DateTimeField()
     cost_in_cents = models.IntegerField()
     status = models.TextField(default="REC")
-    shipment = models.ForeignKey(Shipment, related_name="parcels", on_delete=models.CASCADE)
-
+    shipment = models.ForeignKey(Shipment, related_name="parcels", on_delete=models.CASCADE, null=True)
 
  
 class Job(models.Model):

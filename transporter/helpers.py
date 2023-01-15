@@ -42,9 +42,26 @@ def process_orders():
         pass # log error if time
 
 def make_offer(price, delivery_time, order_id):
-    pass
+    from core.models import Parcel, Order
+    api = Courier.objects.first()
+    offer_reply = api.send_offer(price,delivery_time,order_id)
+    if offer_reply:
+        if offer_reply['status']!="REJ":
+            parcel, created = Parcel.objects.update_or_create(
+                external_id = offer_reply['id']
+                order = Order.objects.get(external_id=order_id)
+                expected_delivery_datetime = offer_reply['expected_delivery_datetime']
+                actual_deliver_datetime = offer_reply['actual_deliver_datetime']
+                cost_in_cents = offer_reply['cost_in_cents']
+                status = "EXP"
+            )
+        else:
+            pass # offer rejected
+    else:
+        pass # 
 
 def get_delivery(delivery_id):
+    api = Courier.objects.first()
     pass
 
 def update_delivery(delivery_id, status):
