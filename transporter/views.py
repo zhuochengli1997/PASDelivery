@@ -2,6 +2,7 @@ import datetime
 from django.shortcuts import render
 from django.contrib.auth.decorators import login_required
 from core.models import Order
+from django.http import HttpResponseRedirect
 
 @login_required()
 def home(request):
@@ -10,20 +11,27 @@ def home(request):
 @login_required()
 def orders_view(request):
     from .helpers import process_orders
+    from core.forms import OfferForm
 
     process_orders()
 
-    return render(request, 'orders.html', context={'orders':Order.objects.all()})
+    return render(request, 'orders.html', context={'orders':Order.objects.all(), 'form': OfferForm()})
+
 
 @login_required()
-def place_offer(request, order_id):
+def place_offer(request, id):
     from .helpers import make_offer
+    from core.forms import OfferForm
+    order = Order.objects.get(external_id=id)
 
-    order = Order.objects.get(id=order_id)
+    if request.method == "POST":
+        form = OfferForm(request.POST)
+        if form.is_valid():
+            data = form.cleaned_data
+            make_offer(data['price'], data['date'], data['external_id'])
+            return HttpResponseRedirect('/thanks/') # TODO: make other redirect
 
-    make_offer(100, order.send_date + datetime.timedelta(days=2), order_id)
-
-    return render(request, 'order_offer.html', context={'order':order})
+    return render(request, 'order_offer.html', context={'order':order, 'form':OfferForm(initial={'external_id':id})})
 
 @login_required()
 def shipment_planning(request):

@@ -62,6 +62,7 @@ class Parcel(models.Model):
     cost_in_cents = models.IntegerField()
     status = models.TextField(default="REC")
     shipment = models.ForeignKey(Shipment, related_name="parcels", on_delete=models.CASCADE)
+    # add customer
 
 
  
