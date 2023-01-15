@@ -50,7 +50,7 @@ class Order(models.Model):
 class Car(models.Model):
     battery_autonomy = models.IntegerField(default=500) # km left
 
-#class Shipment(models.Model):
+class Shipment(models.Model):
     car = models.ForeignKey(Car, related_name="shipments", on_delete=models.CASCADE)
     # store some route
 
