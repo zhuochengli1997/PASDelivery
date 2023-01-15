@@ -48,12 +48,12 @@ def make_offer(price, delivery_time, order_id):
     if offer_reply:
         if offer_reply['status']!="REJ":
             parcel, created = Parcel.objects.update_or_create(
-                external_id = offer_reply['id']
-                order = Order.objects.get(external_id=order_id)
-                expected_delivery_datetime = offer_reply['expected_delivery_datetime']
-                actual_deliver_datetime = offer_reply['actual_deliver_datetime']
-                cost_in_cents = offer_reply['cost_in_cents']
-                status = "EXP"
+                external_id = offer_reply['id'],
+                order = Order.objects.get(external_id=order_id),
+                expected_delivery_datetime = offer_reply['expected_delivery_datetime'],
+                actual_deliver_datetime = offer_reply['actual_deliver_datetime'],
+                cost_in_cents = offer_reply['cost_in_cents'],
+                status = "EXP",
             )
         else:
             pass # offer rejected
@@ -61,11 +61,33 @@ def make_offer(price, delivery_time, order_id):
         pass # 
 
 def get_delivery(delivery_id):
+    from core.models import Parcel, Order
     api = Courier.objects.first()
-    pass
+    delivery = api.get_delivery_by_id(delivery_id)
+    if delivery:
+        parcel=Parcel.objects.create(
+            external_id = delivery['id'],
+            order = Order.objects.get(external_id = delivery['order_id']),
+            expected_delivery_datetime = delivery['expected_delivery_datetime'],
+            actual_deliver_datetime = delivery['actual_deliver_datetime'],
+            cost_in_cents = delivery['cost_in_cents'],
+            status = delivery['status'],
+        ) 
+    else:
+        pass
 
 def update_delivery(delivery_id, status):
-    pass
+    from core.models import Parcel, Order
+    api = Courier.objects.first()
+    delivery = api.get_delivery_by_id(delivery_id)
+    if delivery:
+        api.update_delivery_by_id(delivery_id,status)
+    else:
+        pass
 
 def upload_label(delivery_id, label):
+    api = Courier.objects.first()
+    delivery = api.get_delivery_by_id(delivery_id)
+    if delivery:
+        api.send_label(delivery_id,label)
     pass
