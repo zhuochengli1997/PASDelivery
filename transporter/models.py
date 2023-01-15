@@ -31,7 +31,7 @@ class Courier(models.Model):
             "order_id": order_id
         }
 
-        r = requests.post(url=f'{self.base_url}/api/delivery', headers=self.headers, body=body)
+        r = requests.post(url=f'{self.base_url}/api/delivery', headers=self.headers, json=body)
 
         if r.ok:
             return r.json()
@@ -49,7 +49,7 @@ class Courier(models.Model):
         body = {
             'status': status
         }
-        r = requests.patch(url=f'{self.base_url}/api/delivery/{delivery_id}', headers=self.headers, body=body)
+        r = requests.patch(url=f'{self.base_url}/api/delivery/{delivery_id}', headers=self.headers, json=body)
 
         if r.ok:
             return r.json()
@@ -60,7 +60,7 @@ class Courier(models.Model):
             'labelFile': label # check needed form
         }
 
-        r = requests.post(url=f'{self.base_url}/api/label?delivery_id={delivery_id}', body=body)
+        r = requests.post(url=f'{self.base_url}/api/label?delivery_id={delivery_id}', json=body)
 
         if r.ok:
             return r.json()

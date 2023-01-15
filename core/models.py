@@ -64,8 +64,6 @@ class Parcel(models.Model):
     shipment = models.ForeignKey(Shipment, related_name="parcels", on_delete=models.CASCADE)
     # add customer
 
-
- 
 class Job(models.Model):
     SMALL_SIZE = "small"
     MEDIUM_SIZE = "medium"
