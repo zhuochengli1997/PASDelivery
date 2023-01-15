@@ -12,7 +12,7 @@ Setting up postgresql:
 `` psql postgres `` \
 ` CREATE DATABASE pasddb; ` \
 `` create user pasduser with encrypted password 'password'; `` \
-`` grant all privileges on database pasddb to pasdduser; `` 
+`` grant all privileges on database pasddb to pasduser; `` 
 
 
 Make sure to also set up a virtual environment for this project.
