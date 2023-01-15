@@ -3,17 +3,15 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 
-# Create your models here.
 class Customer(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE);
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     avatar = models.ImageField(upload_to='customer/avatars/', blank=True, null=True)
     stripe_customer_id = models.CharField(max_length=255,blank=True)
     stripe_payment_id = models.CharField(max_length=255,blank=True)
     stripe_card_last4 = models.CharField(max_length=255,blank=True)
 
-
-def __str__(self):
-    return self.user.get_full_name()
+    def __str__(self):
+        return self.user.get_full_name()
 
 class Category(models.Model):
     slug = models.CharField(max_length=255,unique=True)
@@ -21,7 +19,42 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-    
+
+class Sender(models.Model):
+    name = models.TextField()
+    street_and_number = models.TextField()
+    zipcode = models.TextField()
+    city = models.TextField()
+    country = models.TextField()
+
+class Receiver(models.Model):
+    name = models.TextField()
+    street_and_number = models.TextField()
+    zipcode = models.TextField()
+    city = models.TextField()
+    country = models.TextField()
+
+class Order(models.Model):
+    external_id = models.IntegerField()
+    send_date = models.DateTimeField()
+    size_x = models.IntegerField()
+    size_y = models.IntegerField()
+    size_z = models.IntegerField()
+    is_breakable = models.BooleanField(default=False)
+    is_perishable = models.BooleanField(default=False)
+    sender = models.ForeignKey(Sender, on_delete=models.CASCADE, related_name="orders")
+    receiver = models.ForeignKey(Receiver, on_delete=models.CASCADE, related_name="orders")
+
+# in order to check whether an order was accepted, check if there exists a parcel associated to it
+
+class Parcel(models.Model):
+    external_id = models.IntegerField()
+    order = models.OneToOneField(Order, related_name="parcel", on_delete=models.CASCADE)
+    expected_deliver_datetime = models.DateTimeField()
+    actual_deliver_datetime = models.DateTimeField()
+    cost_in_cents = models.IntegerField()
+    status = models.TextField(default="REC")
+ 
 class Job(models.Model):
     SMALL_SIZE = "small"
     MEDIUM_SIZE = "medium"
@@ -80,7 +113,6 @@ class Job(models.Model):
     delivery_photo = models.ImageField(upload_to='job/pickup_photos/',null=True,blank=True)
     delivered_at = models.DateTimeField(null=True,blank=True)
 
-
-    
     def __str__(self):
         return self.description
+

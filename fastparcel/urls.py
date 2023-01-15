@@ -4,7 +4,9 @@ from core import views
 from django.contrib.auth import views as auth_views
 
 from core.customer import views as customer_views
-from core.courier import views as courier_views
+# from core.courier import views as courier_views
+
+from transporter import views as transporter_views
 
 customer_urlpatterns=[
     path('', customer_views.home,name="home"),
@@ -17,8 +19,9 @@ customer_urlpatterns=[
     path('jobs/<job_id>/',customer_views.job_page,name="job"),
 ]
 
-courier_urlpatterns=[
-    path('', courier_views.home,name="home")
+transporter_urlpatterns=[
+    path('', transporter_views.home,name="home"),
+    path('orders/', transporter_views.orders_view, name="orders")
 ]
 
 urlpatterns = [
@@ -31,6 +34,7 @@ urlpatterns = [
     path('sign-up',views.sign_up),
 
     path("customer/", include((customer_urlpatterns,'customer'))),
-    path("courier/", include((courier_urlpatterns,'courier')))
+    path("transporter/", include((transporter_urlpatterns,'transporter')))
+    # path("manager/", include((manager_urlpatters, 'manager')))
 
 ]

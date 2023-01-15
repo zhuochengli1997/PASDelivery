@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row col">
+        <h3>Open Orders</h3>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            Send Date
+        </div>
+        <div class="col-3">
+            Sender
+        </div>
+        <div class="col-3">
+            Receiver
+        </div>
+        <div class="col-3">
+            Destination country
+        </div>
+    </div>
+    <hr>
+    {% for order in orders %}
+        <div class="row">
+            <div class="col-3">
+                {{order.send_date}}
+            </div>
+            <div class="col-3">
+                {{order.sender.name}}
+            </div>
+            <div class="col-3">
+                {{order.receiver.name}}
+            </div>
+            <div class="col-3">
+                {{order.receiver.country}}
+            </div>
+        </div>
+        <hr>
+    {% endfor %}
+
+</div>
+
+{% endblock %}
