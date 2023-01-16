@@ -5,8 +5,10 @@
 
 <div class="container">
     <form action="" method="POST">
-        {% csrf_token %}
-        {{form.as_p}}
+        <table>
+            {% csrf_token %}
+            {{ form.as_table }}
+        </table>
         <!-- <button class="btn btn-primary" type="submit">Send</button> -->
         <input type="submit" name="Send">
     </form>

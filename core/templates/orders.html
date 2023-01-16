@@ -38,9 +38,7 @@
             </div> {% endcomment %}
 
             <div class="col-3">
-                <button class="btn btn-primary" type="button">
-                    <a class="" href="{% url 'transporter:place_offer' order.external_id %}">make offer</a>
-                </button>
+                <a class="btn btn-primary" href="{% url 'transporter:place_offer' order.external_id %}" role="button">Make Offer</a>
             </div>
 
             <!-- <div class="col-3">
