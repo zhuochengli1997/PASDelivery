@@ -61,9 +61,11 @@ class Parcel(models.Model):
     actual_deliver_datetime = models.DateTimeField()
     cost_in_cents = models.IntegerField()
     status = models.TextField(default="REC")
-    shipment = models.ForeignKey(Shipment, related_name="parcels", on_delete=models.CASCADE)
     # add customer
 
+    shipment = models.ForeignKey(Shipment, related_name="parcels", on_delete=models.CASCADE, null=True)
+
+ 
 class Job(models.Model):
     SMALL_SIZE = "small"
     MEDIUM_SIZE = "medium"
@@ -82,7 +84,7 @@ class Job(models.Model):
     COMPLETED_STATUS = 'completed'
     CANCELED_STATUS = 'canceled'
     STATUS = (
-        (CREATING_STATUS, 'Creating'),
+        (CREATING_STATUS, 'Cureating'),
         (PROCESSING_STATUS, 'Processing'),
         (PICKING_STATUS, 'Picking'),
         (DELIVERING_STATUS, 'Delivering'),
