@@ -17,12 +17,18 @@ customer_urlpatterns=[
     path('jobs/current/',customer_views.current_jobs_page,name="current_jobs"),
     path('jobs/archived/',customer_views.archived_jobs_page,name="archived_jobs"),
     path('jobs/<job_id>/',customer_views.job_page,name="job"),
+
+    path('my_parcels/<int:id>', transporter_views.my_parcels_view, name="my_parcels"),
+    path('parcel/<int:id>', transporter_views.parcel_manager, name="parcel"),
 ]
 
 transporter_urlpatterns=[
     path('', transporter_views.home,name="home"),
     path('orders/', transporter_views.orders_view, name="orders"),
-    path('place_offer/<int:id>', transporter_views.place_offer, name="place_offer")
+    path('parcels/', transporter_views.confirmed_orders, name="parcels"),
+    path('place_offer_result/<int:id>/<int:case>', transporter_views.place_offer_result, name="place_offer_result"),
+    path('place_offer/<int:id>', transporter_views.place_offer, name="place_offer"),
+    path('demo/', transporter_views.demo, name="demo")
 ]
 
 urlpatterns = [

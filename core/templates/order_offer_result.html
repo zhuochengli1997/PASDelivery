@@ -5,17 +5,19 @@
 
 <div class="container">
     <div class="row p-4">
-        <h3>Place an offer for order #{{order.external_id}}.</h3>
+        <h3>        Place an offer for order #{{order.external_id}}.        </h3>
     </div>
     <div class="row p-4">
         <div class="col-6">
-            <form action="" method="POST">
-                <table>
-                    {% csrf_token %}
-                    {{ form.as_table }}
-                </table>
-                <input type="submit" class="btn btn-outline-success" name="Send">
-            </form>
+            {% if detail %}
+              <p>{{detail}}</p>
+            
+            {% elif parcel %}
+                Your offer for order #{{order.external_id}} was accepted.
+            {%else%}
+                Your offer for order #{{order.external_id}} was not accepted.
+            {% endif %}
+
         </div>
 
         <div class="col-6">
@@ -150,7 +152,6 @@
                 </div>
               </div>
         </div>
-        {% comment %}  {% endcomment %}
         
     </div>
     

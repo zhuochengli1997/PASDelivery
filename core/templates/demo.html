@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row p-4">
+        <h3>New delivery (car) session.</h3>
+        <h2>battery: 6hrs of autonomy left</h2>
+    </div>
+    <div class="row p-4">
+        <div class="col-8">
+            <div class="card">
+                <div class="card-body p-4">
+                    {% for parcel in parcels %}
+                    <h5 class="card-title">Order #{{parcel.order.external_id}}</h5>
+                    <div class="row">
+                      <div class="ps-4">
+  
+                          <div class="row">
+                              <div class="col-4">
+                                  {{parcel.order.street_and_number}}
+  
+                              </div>
+                              <div class="col-4">
+                                  {{parcel.order.receiver.name}}
+                              </div>
+                              <div class="col-2">
+                                  <button class="btn btn-outline-success">Mark as shipped</button>
+                              </div>
+                              <div class="col-2">
+                                <button class="btn btn-outline-danger">Mark as cancelled</button>
+
+                              </div>
+                              <hr>
+                          </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                 
+                </div>
+              </div>
+        </div>
+        {% comment %}  {% endcomment %}
+        
+    </div>
+    
+</div>
+
+{% endblock %}

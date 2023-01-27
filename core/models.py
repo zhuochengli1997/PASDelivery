@@ -27,12 +27,35 @@ class Sender(models.Model):
     city = models.TextField()
     country = models.TextField()
 
+class Schedule(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="schedule")
+    time = models.TimeField()
+    location = models.TextField()
+
 class Receiver(models.Model):
     name = models.TextField()
     street_and_number = models.TextField()
     zipcode = models.TextField()
     city = models.TextField()
     country = models.TextField()
+    user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="receiver", null=True)
+
+class Car(models.Model):
+    battery_autonomy = models.IntegerField(default=500) # km left
+
+class Shipment(models.Model):
+    car = models.ForeignKey(Car, related_name="shipments", on_delete=models.CASCADE)
+    # store some route
+
+class Parcel(models.Model):
+    external_id = models.IntegerField()
+    expected_deliver_datetime = models.DateTimeField(null=True)
+    actual_deliver_datetime = models.DateTimeField(null=True)
+    cost_in_cents = models.IntegerField()
+    status = models.TextField(default="REC")
+    # add customer
+
+    shipment = models.ForeignKey(Shipment, related_name="parcels", on_delete=models.CASCADE, null=True)
 
 class Order(models.Model):
     external_id = models.IntegerField()
@@ -44,28 +67,10 @@ class Order(models.Model):
     is_perishable = models.BooleanField(default=False)
     sender = models.ForeignKey(Sender, on_delete=models.CASCADE, related_name="orders")
     receiver = models.ForeignKey(Receiver, on_delete=models.CASCADE, related_name="orders")
-
+    parcel = models.OneToOneField(Parcel, related_name="order", on_delete=models.CASCADE, null=True)
+    last_delivery = models.JSONField(null=True, default=dict)
 # in order to check whether an order was accepted, check if there exists a parcel associated to it
 
-class Car(models.Model):
-    battery_autonomy = models.IntegerField(default=500) # km left
-
-class Shipment(models.Model):
-    car = models.ForeignKey(Car, related_name="shipments", on_delete=models.CASCADE)
-    # store some route
-
-class Parcel(models.Model):
-    external_id = models.IntegerField()
-    order = models.OneToOneField(Order, related_name="parcel", on_delete=models.CASCADE)
-    expected_deliver_datetime = models.DateTimeField()
-    actual_deliver_datetime = models.DateTimeField()
-    cost_in_cents = models.IntegerField()
-    status = models.TextField(default="REC")
-    # add customer
-
-    shipment = models.ForeignKey(Shipment, related_name="parcels", on_delete=models.CASCADE, null=True)
-
- 
 class Job(models.Model):
     SMALL_SIZE = "small"
     MEDIUM_SIZE = "medium"

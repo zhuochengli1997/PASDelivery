@@ -13,7 +13,8 @@ class Courier(models.Model):
     def headers(self):
         return {
             "x-api-key": self.apikey,
-            "accept": "application/json"
+            "accept": "application/json",
+            "Content-Type": "application/json",
         }
 
     def get_orders(self):
@@ -26,21 +27,24 @@ class Courier(models.Model):
 
     def send_offer(self, price, delivery_time, order_id): # to test
         body = {
-            "price_in_cents": price,
-            "expected_delivery_datetime": delivery_time, # utz format
-            "order_id": order_id
+            "price_in_cents": str(price),
+            "expected_delivery_datetime": str(delivery_time), # utz format
+            "order_id": str(order_id)
         }
 
-        r = requests.post(url=f'{self.base_url}/api/delivery', headers=self.headers, json=body)
-
+        r = requests.post(url='https://pasd-webshop-api.onrender.com/api/delivery/', headers=self.headers, json=body)
+        
+        print(r)
+        
         if r.ok:
-            return r.json()
+            return True, r.json()
         # status code 400 seems to mean that is already being delivered, so the offer was not placed
-        return None
+        if r.status_code == 400:
+            return False, r.json()
+        return False, None
 
     def get_delivery_by_id(self, delivery_id):
         r = requests.get(url=f'{self.base_url}/api/delivery/{delivery_id}', headers=self.headers)
-
         if r.ok:
             return r.json()
         return None
