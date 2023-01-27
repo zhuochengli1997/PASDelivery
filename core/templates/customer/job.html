@@ -65,6 +65,7 @@ window.initMap = initMap;
 
 <!--Job Description-->
 <div class="media mb-4">
+    
     <img src="{{ job.photo.url }}" class="rounded-lg mr-3" width="150" height="150">
     <div class="media-body">
         <h4>{{job.name}}</h4>
@@ -112,7 +113,7 @@ window.initMap = initMap;
                 {% if pickup_photo %}
                 <img src="{{job.pickup_photo.url}}" class="rounded-lg photo" width="130" height="130">
                 {%else%}
-                <div class="photo-blank">Pickup photo will be displayed here</div>
+                <div class="photo-blank">Pickup code will be displayed here</div>
                 {%endif%}
             </div>
         </div>
@@ -135,7 +136,7 @@ window.initMap = initMap;
                 {% if delivery_photo %}
                 <img src="{{job.pickup_photo.url}}" class="rounded-lg photo" width="130" height="130">
                 {%else%}
-                <div class="photo-blank">Delivery photo will be displayed here</div>
+                <div class="photo-blank">Delivery code will be displayed here</div>
                 {%endif%}
             </div>
         </div>

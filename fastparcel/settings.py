@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'core',
     'bootstrap4',
     'social_django',
+    'transporter',
 ]
 
 MIDDLEWARE = [
@@ -86,6 +87,7 @@ DATABASES = {
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
+
 
 
 # Password validation

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+
+{% for shipment in shipments %}
+
+    <div class="row">
+        <div class="col-6">
+            <b>Shipment #{{shipment.external_id}}</b>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-6">
+            {% for parcel in shipment.parcels %}
+                {% comment %} show parcel and scheduled time {% endcomment %}
+            {% endfor %}
+        </div>
+    </div>
+
+{% endfor %}
+    
+</div>
+
+{% endblock %}

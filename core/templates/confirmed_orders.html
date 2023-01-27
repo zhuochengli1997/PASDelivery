@@ -1,0 +1,49 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row col">
+        <h3>Parcels</h3>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            Send Date
+        </div>
+        <div class="col-3">
+            Destination
+        </div>
+        <div class="col-1">
+            Status
+        </div>
+        <div class="col-3">
+            Expected delivery date
+        </div>
+    </div>
+    <hr>
+    {% for parcel in parcels %}
+        <div class="row">
+            <div class="col-3">
+                {{parcel.order.send_date}}
+            </div>
+            <div class="col-3">
+                {{parcel.order.receiver.street_and_number}} {{parcel.order.receiver.zipcode}} {{parcel.order.receiver.city}} {{parcel.order.receiver.country}}
+            </div>
+            <div class="col-1">
+                {{parcel.status}}
+            </div>
+            <div class="col-3">
+                {{parcel.expected_deliver_datetime}}
+            </div>
+        </div>
+
+        <hr>
+    {% endfor %}
+
+</div>
+
+
+
+
+{% endblock %}

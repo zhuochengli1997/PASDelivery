@@ -8,7 +8,7 @@ from django.contrib.auth.decorators import login_required
 from django.urls import reverse
 from core.customer import forms
 from django.conf import settings
-from core.models import Job
+from core.models import Job, Receiver, Customer
 
 from core.customer import forms
 
@@ -23,10 +23,19 @@ def profile_page(request):
 
     user_form = forms.BasicUserForm(instance=request.user)
 
+
+    # c = Customer.objects.create(user=request.user)
+
     if request.method == "POST":
         user_form = forms.BasicUserForm(request.POST,instance = request.user)
         if user_form.is_valid():
             user_form.save()
+            for receiver in Receiver.objects.all():
+                if receiver.name == request.user.first_name + " " + request.user.last_name:
+                    receiver.user = request.user
+                    receiver.save()
+                    print("added receiver")
+
             return redirect(reverse('customer:profile'))
 
 

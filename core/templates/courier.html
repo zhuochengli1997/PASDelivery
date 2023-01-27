@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row">
+        <p><b>Welcome to Manager View</b></p>
+    </div>
+    <div class="row">
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Open Orders</h5>
+                  <p class="card-text">Here you can check open orders and make an offer.</p>
+                  <a href="{%url 'transporter:orders'%}" class="btn btn-warning">Details</a>
+                </div>
+              </div>
+        </div>
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-body">
+                  <h5 class="card-title">Confirmed Orders</h5>
+                  <p class="card-text">Here you can check the status of orders that have been processed.</p>
+                  <a href="{%url 'transporter:parcels'%}" class="btn btn-warning">Details</a>
+                </div>
+              </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row col">
+        <h3>My incoming parcels</h3>
+    </div>
+    <div class="row">
+        <div class="col-1">
+            
+        </div>
+        <div class="col-3">
+            Expected delivery date
+        </div>
+        <div class="col-1">
+            Status
+        </div>
+        <div class="col-3">
+            Sender
+        </div>
+        <div class="col-2">
+            Schedule
+        </div>
+
+    </div>
+    <hr>
+    {% for parcel in parcels %}
+        <div class="row">
+            <div class="col-1">
+                <a href="{% url 'customer:parcel' parcel.id %}">#{{parcel.id}}</a>
+            </div>
+            <div class="col-3">
+                {{parcel.expected_deliver_datetime}}
+            </div>
+            <div class="col-1">
+                {{parcel.status}}
+            </div>
+            <div class="col-3">
+                {{parcel.order.sender.name}}
+            </div>
+            <div class="col-2">
+                <a href="{% url 'customer:parcel' parcel.id %}">Set up schedule</a>
+            </div>
+        </div>
+
+        <hr>
+    {% endfor %}
+
+</div>
+
+
+
+
+{% endblock %}

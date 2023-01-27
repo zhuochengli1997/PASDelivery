@@ -17,3 +17,14 @@ class SignUpForm(UserCreationForm):
         if User.objects.filter(email=email):
             raise ValidationError("The email address already exists")
         return email
+
+
+class DateInput(forms.DateInput):
+    input_type = 'date'
+
+class OfferForm(forms.Form):
+    price = forms.CharField(label="Enter cost in cents:")
+    date = forms.DateTimeField(widget=DateInput())
+    external_id = forms.IntegerField(widget = forms.HiddenInput())
+
+  

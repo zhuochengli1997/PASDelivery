@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row col">
+        <h3>Open Orders</h3>
+    </div>
+    <div class="row">
+        <div class="col-3">
+            Send Date
+        </div>
+        <div class="col-3">
+            Sender
+        </div>
+        <div class="col-3">
+            Receiver
+        </div>
+        <div class="col-3">
+            Destination country
+        </div>
+    </div>
+    <hr>
+    {% for order in orders %}
+        <div class="row">
+            <div class="col-3">
+                {{order.send_date}}
+            </div>
+            <div class="col-3">
+                {{order.receiver.city}}
+            </div>
+            <div class="col-3">
+                {{order.receiver.country}}
+            </div>
+            {% comment %} <div class="col-3">
+                <button class="btn btn-primary"> <a href="{% url 'transporter:place_offer' order.external_id %}"></a> </button>
+            </div> {% endcomment %}
+
+            <div class="col-3">
+                <a class="btn btn-primary" href="{% url 'transporter:place_offer' order.external_id %}" role="button">Make Offer</a>
+            </div>
+
+            <!-- <div class="col-3">
+                <button class="btn btn-primary" type="button" data-bs-toggle="collapse" data-bs-target="#collapse-{{order.id}}" aria-expanded="false" aria-controls="collapse-{{order.id}}">
+                    Make an offer
+                </button>
+            </div> -->
+        </div>
+
+        <!-- <div class="row col p-3">
+            <div class="collapse" id="collapse-{{order.id}}">
+                <div class="card card-body">
+                    <form action="">
+                        {% csrf_token %}
+
+                    </form>
+                </div>
+            </div>
+        </div> -->
+        <hr>
+    {% endfor %}
+
+</div>
+
+
+
+
+{% endblock %}

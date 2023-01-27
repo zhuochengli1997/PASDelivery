@@ -1,0 +1,159 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="container">
+    <div class="row p-4">
+        <h3>Place an offer for order #{{order.external_id}}.</h3>
+    </div>
+    <div class="row p-4">
+        <div class="col-6">
+            <form action="" method="POST">
+                <table>
+                    {% csrf_token %}
+                    {{ form.as_table }}
+                </table>
+                <input type="submit" class="btn btn-outline-success" name="Send">
+            </form>
+        </div>
+
+        <div class="col-6">
+            <div class="card">
+                <div class="card-body p-4">
+                  <h5 class="card-title">Order #{{order.external_id}}</h5>
+                  <div class="row">
+                    <div class="ps-4">
+                        <div class="row">
+                           <div class="col-6">
+                            <b>Send Date</b>
+                           </div>
+                           <div class="col-6">
+                            {{order.send_date}}
+                           </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <b>Breakable</b>
+                            </div>
+                            <div class="col-6">
+                                {% if order.is_breakable %}
+                                Yes
+                                {% else %}
+                                No
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-6">
+                                <b>Perishable</b>
+                            </div>
+                            <div class="col-6">
+                                {% if order.is_perishable %}
+                                Yes
+                                {% else %}
+                                No
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
+                            <b>Sender</b>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    Name
+                                </div>
+                                <div class="col-6">
+                                    {{order.sender.name}}
+                                </div>
+                            </div>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    Address
+                                </div>
+                                <div class="col-6">
+                                    {{order.sender.street_and_number}}
+                                </div>
+                            </div>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    Zipcode
+                                </div>
+                                <div class="col-6">
+                                    {{order.sender.zipcode}}
+                                </div>
+                            </div>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    City
+                                </div>
+                                <div class="col-6">
+                                    {{order.sender.city}}
+                                </div>
+                            </div>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    Country
+                                </div>
+                                <div class="col-6">
+                                    {{order.sender.country}}
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <b>Receiver</b>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    Name
+                                </div>
+                                <div class="col-6">
+                                    {{order.receiver.name}}
+                                </div>
+                            </div>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    Address
+                                </div>
+                                <div class="col-6">
+                                    {{order.receiver.street_and_number}}
+                                </div>
+                            </div>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    Zipcode
+                                </div>
+                                <div class="col-6">
+                                    {{order.receiver.zipcode}}
+                                </div>
+                            </div>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    City
+                                </div>
+                                <div class="col-6">
+                                    {{order.receiver.city}}
+                                </div>
+                            </div>
+                            <div class="row px-4">
+                                <div class="col-6">
+                                    Country
+                                </div>
+                                <div class="col-6">
+                                    {{order.receiver.country}}
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-6">
+                        <div class="row"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+        </div>
+        {% comment %}  {% endcomment %}
+        
+    </div>
+    
+</div>
+
+{% endblock %}
